@@ -1,1 +1,26 @@
-# BigData_project
+# 让你看我们项目了吗，gun去玩几把去
+
+# vue_project
+
+## Project setup
+```
+pnpm install
+```
+
+### Compiles and hot-reloads for development
+```
+pnpm run serve
+```
+
+### Compiles and minifies for production
+```
+pnpm run build
+```
+
+### Lints and fixes files
+```
+pnpm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

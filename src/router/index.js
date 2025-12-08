@@ -14,6 +14,25 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  },
+  {
+    path: '/admin',
+    component: () => import('@/layouts/AdminLayout.vue'),
+    meta: {requiresAuth: true},
+    children: [
+      // ... 其他路由
+      {
+        path: 'books/BookList',
+        name: 'BookList',
+        component: () => import('@/views/admin/books/BookList.vue')
+      },
+      // {
+      //   path: 'books/add',
+      //   name: 'BookAdd',
+      //   component: () => import('@/views/admin/books/BookAdd.vue')
+      // }
+      // ... 更多路由
+    ]
   }
 ]
 

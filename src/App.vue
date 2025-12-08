@@ -4,13 +4,17 @@
     <li><router-link to="/about">关于我们</router-link></li>
     <li style="float:right"><router-link to="/login">登录</router-link></li>
     <li style="float:right"><router-link to="/register">注册</router-link></li>
+    <li style="float:right"><router-link to="/admin/books/BookList">图书管理</router-link></li>
   </ul>
-  <!--   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view /> -->
+
+  <div style="margin-top: 60px;">
+    <router-view></router-view>
+  </div>
 </template>
+
+<script setup>
+// import BookList from '@/views/admin/books/BookList.vue'
+</script>
 
 <style>
 #app {

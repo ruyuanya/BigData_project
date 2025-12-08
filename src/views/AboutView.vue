@@ -20,9 +20,9 @@
     <h3>学院愿景</h3>
     <p>我们以培养适应新时代需求的高素质技能人才为己任，为深圳建设中国特色社会主义先行示范区贡献职业教育力量。</p >
   </div>
-  <div>
+  <!-- <div>
     <el-button type="primary" @click="$router.push('admin\books\BookList.vue')">图书管理</el-button>
-  </div>
+  </div> -->
   </div>
 </template>
 

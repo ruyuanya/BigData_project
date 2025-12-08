@@ -28,30 +28,41 @@ function postmysql(req, res, action) {
     const mockData = {
         getBooks: {
             code: 200,
-            // data: [
-            //     {
-            //         id: 1,
-            //         title: 'Vue.js设计与实现',
-            //         author: '霍春阳',
-            //         isbn: '9787115585629',
-            //         category: '前端',
-            //         publisher: '人民邮电出版社',
-            //         total: 10,
-            //         available: 8,
-            //         status: 1
-            //     },
-            //     {
-            //         id: 2,
-            //         title: 'JavaScript高级程序设计',
-            //         author: 'Matt Frisbie',
-            //         isbn: '9787115599754',
-            //         category: '前端',
-            //         publisher: '人民邮电出版社',
-            //         total: 15,
-            //         available: 5,
-            //         status: 0
-            //     }
-            // ],
+            data: [
+                {
+                    id: 1,
+                    title: 'Vue.js设计与实现',
+                    author: '霍春阳',
+                    isbn: '9787115585629',
+                    category: '前端',
+                    publisher: '人民邮电出版社',
+                    total: 10,
+                    available: 8,
+                    status: 1
+                },
+                {
+                    id: 2,
+                    title: 'JavaScript高级程序设计',
+                    author: 'Matt Frisbie',
+                    isbn: '9787115599754',
+                    category: '前端',
+                    publisher: '人民邮电出版社',
+                    total: 15,
+                    available: 5,
+                    status: 0
+                },
+                {
+                    id: 3,
+                    title: '深入理解计算机系统',
+                    author: 'Randal E. Bryant',
+                    isbn: '9787111544937',
+                    category: '计算机基础',
+                    publisher: '机械工业出版社',
+                    total: 8,
+                    available: 8,
+                    status: 1
+                }
+            ],
             total: 2,
             message: '获取成功'
         },

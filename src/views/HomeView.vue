@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <h1>欢迎来到图书馆管理系统</h1>
-    <div>
+    <!-- <div>
       <el-button type="primary" @click="$router.push('admin\books\BookList.vue')">图书管理</el-button>
-    </div>
+    </div> -->
   </div>
 </template>
 

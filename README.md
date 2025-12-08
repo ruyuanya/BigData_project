@@ -1,18 +1,20 @@
-# 让你看我们项目了吗，gun去玩几把去
+# 饿啊，Vue项目肘起！
+
+![](./src/assets/fireman.jpg)
 
 # vue_project
 
-## Project setup
+## 下载依赖
 ```
 pnpm install
 ```
 
-### Compiles and hot-reloads for development
+### 启动开发测试
 ```
 pnpm run serve
 ```
 
-### Compiles and minifies for production
+### 构建项目
 ```
 pnpm run build
 ```

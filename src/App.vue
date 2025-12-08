@@ -25,7 +25,7 @@
 
 /* 添加内容区域的样式，避免被导航栏覆盖 */
 .content {
-  margin-top: 60px; /* 导航栏高度 */
+  margin-top: 60px;
   padding: 20px;
 }
 

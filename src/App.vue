@@ -1,15 +1,18 @@
 <template>
-  <ul>
-    <li><router-link to="/">首页</router-link></li>
-    <li><router-link to="/about">关于我们</router-link></li>
-    <li style="float:right"><router-link to="/login">登录</router-link></li>
-    <li style="float:right"><router-link to="/register">注册</router-link></li>
-  </ul>
-  <!--   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view /> -->
+  <div>
+    <!-- 导航栏 -->
+    <ul>
+      <li><router-link to="/">首页</router-link></li>
+      <li><router-link to="/about">关于我们</router-link></li>
+      <li style="float:right"><router-link to="/login">登录</router-link></li>
+      <li style="float:right"><router-link to="/register">注册</router-link></li>
+    </ul>
+    
+    <!-- 路由视图容器 - 这是显示页面的关键 -->
+    <div class="content">
+      <router-view />
+    </div>
+  </div>
 </template>
 
 <style>
@@ -17,21 +20,13 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+/* 添加内容区域的样式，避免被导航栏覆盖 */
+.content {
+  margin-top: 60px; /* 导航栏高度 */
+  padding: 20px;
 }
 
 /* 顶部导航 */
@@ -45,6 +40,7 @@ ul {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 1000; /* 确保导航栏在最上层 */
 }
 
 li {
@@ -64,4 +60,9 @@ li a:hover {
   background-color: #111;
 }
 
+/* 当前激活的路由链接样式 */
+li a.router-link-exact-active {
+  background-color: #42b983;
+  color: white;
+}
 </style>

@@ -2,7 +2,7 @@
   <ul>
     <li><router-link to="/">首页</router-link></li>
     <li><router-link to="/about">关于我们</router-link></li>
-    <li style="float:right"><router-link to="/login">登录</router-link></li>
+    <li style="float:right"><router-link to="/Login">登录</router-link></li>
     <li style="float:right"><router-link to="/register">注册</router-link></li>
     <li style="float:right"><router-link to="/admin/books/BookList">图书管理</router-link></li>
   </ul>

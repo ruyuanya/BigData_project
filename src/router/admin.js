@@ -17,6 +17,9 @@ export default [
           role: 'admin'
         }
       },
+      {
+        path: ''
+      }
       // ... 更多路由
     ]
   }

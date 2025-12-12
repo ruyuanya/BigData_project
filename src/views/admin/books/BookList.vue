@@ -128,7 +128,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Plus } from '@element-plus/icons-vue'
-import { getBooks, addBook, updateBook, deleteBook } from '@/api/modules/book.js'
+import { getBooks, addBook, updateBook, deleteBook } from '@/api/book.js'
 
 // 数据
 const searchText = ref('')

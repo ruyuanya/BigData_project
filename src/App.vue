@@ -61,11 +61,34 @@ li a {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
+  transition: all 0.5s;
+  cursor: pointer;
 }
 
-/* 鼠标悬停时将链接颜色更改为 #111（黑色）*/
-li a:hover {
+/* 加了个动画 */
+li  {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+li :after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+li:hover  {
   background-color: #111;
+  padding-right: 25px;
 }
 
+li:hover :after {
+  opacity: 1;
+  right: 0;
+}
 </style>

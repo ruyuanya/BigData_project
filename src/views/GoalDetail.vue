@@ -175,6 +175,17 @@ export default {
   },
   mounted() {
     this.goalId = parseInt(this.$route.params.id)
+    this.scrollToTop()
+  },
+  // 监听路由变化
+  watch: {
+    '$route.params.id': {
+      handler(newId) {
+        this.goalId = parseInt(newId)
+        this.scrollToTop()
+      },
+      immediate: true
+    }
   },
   methods: {
     getGoalTag(id) {
@@ -184,6 +195,21 @@ export default {
         3: '改革创新'
       }
       return tags[id] || '详情'
+    },
+    scrollToTop() {
+      // 方法1: 使用requestAnimationFrame确保DOM渲染完成
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+      })
+      
+      // 方法2: 使用nextTick确保Vue更新完成
+      this.$nextTick(() => {
+        document.documentElement.scrollTop = 0
+        document.body.scrollTop = 0
+      })
     }
   }
 }

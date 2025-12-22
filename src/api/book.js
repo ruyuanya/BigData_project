@@ -9,6 +9,13 @@ export function getBooks(params) {
   })
 }
 
+export function getBookById(id) {
+  return request({
+    url: `/books/${id}`,
+    method: 'get'
+  })
+}
+
 // 添加图书
 export function addBook(data) {
   return request({

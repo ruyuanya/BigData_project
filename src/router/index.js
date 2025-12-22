@@ -25,6 +25,12 @@ const routes = [
     component: () => import('../views/RegisterPage.vue')
   }, 
   {
+    path: '/goal-detail/:id',
+    name: 'GoalDetail',
+    component: () => import(/* webpackChunkName: "goal-detail" */ '../views/GoalDetail.vue'),
+    props: true
+  },
+  {
     path: '/admin',
     component: () => import('@/layouts/AdminLayout.vue'),
     meta: { requiresAuth: true },

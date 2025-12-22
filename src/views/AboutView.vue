@@ -269,15 +269,12 @@ export default {
   margin-top: 20px;
 }
 
+
 .goal-card {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 25px;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  position: static; 
+  top: auto;
+  left: auto;
+  z-index: auto;
 }
 
 .goal-card:hover {

@@ -14,7 +14,7 @@
           <el-button 
             type="primary" 
             icon="el-icon-notebook-2"
-            @click="$router.push('/admin/books')"
+            @click="$router.push('/admin/books/BookList')"
             class="action-btn"
             size="medium"
           >
@@ -32,7 +32,7 @@
           <el-button 
             type="success" 
             icon="el-icon-user"
-            @click="$router.push('/login')"
+            @click="$router.push('Login')"
             class="action-btn"
             size="medium"
           >

@@ -146,6 +146,8 @@ export default {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  height: 40px; /* 添加统一高度 */
+  box-sizing: border-box; /* 确保padding包含在高度内 */
 }
 
 .login-btn {
@@ -158,6 +160,7 @@ export default {
   font-size: 16px;
   cursor: pointer;
   margin-top: 20px;
+  height: 44px; /* 按钮也设置统一高度 */
 }
 
 .login-btn:disabled {

@@ -2,80 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../config/database');
 
-// 用户登录接口
-router.post('/Userlogin', async (req, res) => {
-  const { username, password, role } = req.body;
-  
-  if (!username || !password || !role) {
-    return res.json({ code: 400, message: '参数不完整' });
-  }
-
-  try {
-    // 调用简单的存储过程
-    const [rows] = await pool.execute(
-      'CALL UserLogin(?, ?, ?)',
-      [username, password, role]
-    );
-    
-    // 简单的存储过程直接返回用户信息
-    if (rows[0].length > 0) {
-      const user = rows[0][0];
-      // 生成token
-      const token = Buffer.from(`${user.username}:${user.role}:${Date.now()}`).toString('base64');
-      
-      res.json({
-        code: 200,
-        message: '登录成功',
-        data: {
-          token: token,
-          userInfo: {
-            id: user.id,
-            username: user.username,
-            role: user.role
-          }
-        }
-      });
-    } else {
-      res.json({ code: 401, message: '用户名或密码错误' });
-    }
-    
-  } catch (error) {
-    console.error('登录错误:', error);
-    res.json({ code: 500, message: '服务器错误' });
-  }
+// 用户登录接口 - 使用postmysql方式
+router.post('/Userlogin', (req, res) => {
+    postmysql(req, res, "Userlogin");
 });
 
-router.get('/getUserInfo', async (req, res) => {
-  const token = req.headers.authorization;
-  
-  if (!token) {
-    return res.json({ code: 401, message: '未登录' });
-  }
-  
-  try {
-    const [rows] = await pool.execute(
-      'CALL GetUserInfo(?)',
-      [token]
-    );
-    if (rows[0].length > 0) {
-      const user = rows[0][0];
-      
-      res.json({
-        code: 200,
-        message: '获取成功',
-        data: {
-          id: user.id,
-          username: user.username,
-          role: user.role
-        }
-      });
-    } else {
-      res.json({ code: 401, message: 'token无效' });
-    }
-    
-  } catch (error) {
-    res.json({ code: 401, message: 'token无效' });
-  }
+// 获取用户信息接口 - 使用postmysql方式
+router.get('/getUserInfo', (req, res) => {
+    postmysql(req, res, "getUserInfo");
 });
 
 // 图书管理接口保持不变
@@ -98,6 +32,27 @@ router.route("/:id").delete((req, res) => {
 function postmysql(req, res, action) {
     // 模拟数据返回
     const mockData = {
+        Userlogin: {
+            code: 200,
+            message: '登录成功',
+            data: {
+                token: 'mock_token_' + Date.now(),
+                userInfo: {
+                    id: 1,
+                    username: req.body.username || 'testuser',
+                    role: req.body.role || 'teacher'
+                }
+            }
+        },
+        getUserInfo: {
+            code: 200,
+            message: '获取成功',
+            data: {
+                id: 1,
+                username: 'testuser',
+                role: 'teacher'
+            }
+        },
         getBooks: {
             code: 200,
             data: [

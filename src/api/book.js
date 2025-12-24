@@ -33,7 +33,7 @@ export function deleteBook(id) {
 
 export function login(data) {
   return request({
-    url: '/auth/Userlogin',//登录接口地址
+    url: '/books/Userlogin',//登录接口地址
     method: 'post',//请求方法
     data//请求数据（用户名、密码、身份）
   })
@@ -41,7 +41,7 @@ export function login(data) {
 
 export function getUserInfo() {
   return request({
-    url: '/auth/getUserInfo',
+    url: '/books/getUserInfo',//获取用户信息接口地址
     method: 'get'
   })
 }

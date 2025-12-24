@@ -13,9 +13,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 路由
 app.use('/api/books', require('./routes/book'));
-app.use('/api/auth', require('./routes/auth'));// 认证路由
-
-
 
 // 健康检查接口
 app.get('/api/health', (req, res) => {

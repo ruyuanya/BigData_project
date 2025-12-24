@@ -40,7 +40,7 @@
         </button>
       </form>
       <p class="login-link">
-        已有账号？<router-link to="/login">立即登录</router-link>
+        已有账号？<router-link to="/Login">立即登录</router-link>
       </p>
     </div>
   </div>

@@ -2,27 +2,99 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../config/database');
 
-//获取所有图书
+// 用户登录接口
+router.post('/Userlogin', async (req, res) => {
+  const { username, password, role } = req.body;
+  
+  if (!username || !password || !role) {
+    return res.json({ code: 400, message: '参数不完整' });
+  }
+
+  try {
+    // 调用简单的存储过程
+    const [rows] = await pool.execute(
+      'CALL UserLogin(?, ?, ?)',
+      [username, password, role]
+    );
+    
+    // 简单的存储过程直接返回用户信息
+    if (rows[0].length > 0) {
+      const user = rows[0][0];
+      // 生成token
+      const token = Buffer.from(`${user.username}:${user.role}:${Date.now()}`).toString('base64');
+      
+      res.json({
+        code: 200,
+        message: '登录成功',
+        data: {
+          token: token,
+          userInfo: {
+            id: user.id,
+            username: user.username,
+            role: user.role
+          }
+        }
+      });
+    } else {
+      res.json({ code: 401, message: '用户名或密码错误' });
+    }
+    
+  } catch (error) {
+    console.error('登录错误:', error);
+    res.json({ code: 500, message: '服务器错误' });
+  }
+});
+
+router.get('/getUserInfo', async (req, res) => {
+  const token = req.headers.authorization;
+  
+  if (!token) {
+    return res.json({ code: 401, message: '未登录' });
+  }
+  
+  try {
+    const [rows] = await pool.execute(
+      'CALL GetUserInfo(?)',
+      [token]
+    );
+    if (rows[0].length > 0) {
+      const user = rows[0][0];
+      
+      res.json({
+        code: 200,
+        message: '获取成功',
+        data: {
+          id: user.id,
+          username: user.username,
+          role: user.role
+        }
+      });
+    } else {
+      res.json({ code: 401, message: 'token无效' });
+    }
+    
+  } catch (error) {
+    res.json({ code: 401, message: 'token无效' });
+  }
+});
+
+// 图书管理接口保持不变
 router.route("/").get((req, res) => {
     postmysql(req, res, "getBooks");
 });
 
-//添加图书
 router.route("/").post((req, res) => {
     postmysql(req, res, "addBook");
 });
 
-//更新图书
 router.route("/:id").put((req, res) => {
     postmysql(req, res, "updateBook");
 });
 
-//删除图书
 router.route("/:id").delete((req, res) => {
     postmysql(req, res, "deleteBook");
 });
 
-// 添加postmysql函数定义
 function postmysql(req, res, action) {
     // 模拟数据返回
     const mockData = {

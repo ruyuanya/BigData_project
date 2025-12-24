@@ -69,18 +69,34 @@ export default {
           role: this.role
         })
         
-        if (response.code === 200) {
-          localStorage.setItem('token', response.data.token)
-          localStorage.setItem('userInfo', JSON.stringify(response.data.userInfo))
+        // 修复响应格式检查
+        if (response.code === 200 || response.success) {
+          // 存储token和用户信息
+          localStorage.setItem('token', response.data?.token || 'default-token')
           
+          // 根据实际API响应格式存储用户信息
+          const userInfo = response.data?.userInfo || response.data || {
+            id: response.data?.[0]?.[0]?.id,
+            username: this.username,
+            role: this.role
+          }
+          localStorage.setItem('userInfo', JSON.stringify(userInfo))
+          
+          // 添加调试信息
+          console.log('登录成功，用户信息：', userInfo)
+    
+          // 跳转到对应页面
           if (this.role === 'teacher') {
-            this.$router.push('/admin/books/BookList')
+            this.$router.push('/')
           } else {
             this.$router.push('/')
           }
+        } else {
+          this.errorMessage = response.message || '登录失败'
         }
       } catch (error) {
-        this.errorMessage = error.message || '登录失败'
+        console.error('登录错误：', error)
+        this.errorMessage = error.message || '登录失败，请检查网络连接'
       } finally {
         this.loading = false
       }

@@ -121,26 +121,26 @@ export default {
         this.bookList = res.data || []
       } catch (error) {
         // 使用模拟数据
-        this.bookList = [
-          {
-            id: 1,
-            title: 'Vue.js设计与实现',
-            author: '霍春阳',
-            isbn: '9787115585629',
-            category: '前端',
-            publisher: '人民邮电出版社',
-            status: 1
-          },
-          {
-            id: 2,
-            title: 'JavaScript高级程序设计',
-            author: 'Matt Frisbie',
-            isbn: '9787115599754',
-            category: '前端',
-            publisher: '人民邮电出版社',
-            status: 0
-          }
-        ]
+        // this.bookList = [
+        //   {
+        //     id: 1,
+        //     title: 'Vue.js设计与实现',
+        //     author: '霍春阳',
+        //     isbn: '9787115585629',
+        //     category: '前端',
+        //     publisher: '人民邮电出版社',
+        //     status: 1
+        //   },
+        //   {
+        //     id: 2,
+        //     title: 'JavaScript高级程序设计',
+        //     author: 'Matt Frisbie',
+        //     isbn: '9787115599754',
+        //     category: '前端',
+        //     publisher: '人民邮电出版社',
+        //     status: 0
+        //   }
+        // ]
       }
     },
     

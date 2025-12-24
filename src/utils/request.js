@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  // 移除baseURL，让请求通过开发服务器代理
   timeout: 5000
 })
 
@@ -24,7 +24,8 @@ request.interceptors.response.use(
     const res = response.data
     
     // 根据后端返回的数据结构进行调整
-    if (res.code === 200) {
+    // 后端返回的数据结构是 { success: true, data: result }
+    if (res.success) {
       return res
     } else {
       ElMessage.error(res.message || '请求失败')

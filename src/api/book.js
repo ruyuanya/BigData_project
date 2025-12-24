@@ -1,47 +1,47 @@
 import request from '@/utils/request'
+let baseURL = 'http://localhost:7003'
+// export function getBooks(params) {
+//   return request({
+//     url: '/api/books',
+//     method: 'get',
+//     params
+//   })
+// }
 
-export function getBooks(params) {
-  return request({
-    url: '/books',
-    method: 'get',
-    params
-  })
-}
+// export function addBook(data) {
+//   return request({
+//     url: '/api/books',
+//     method: 'post',
+//     data
+//   })
+// }
 
-export function addBook(data) {
+// export function updateBook(data) {
+//   return request({
+//     url: '/api/books',
+//     method: 'put',
+//     data
+//   })
+// }
+
+// export function deleteBook(id) {
+//   return request({
+//     url: `/api/books/${id}`,
+//     method: 'delete'
+//   })
+// }
+
+export function login(data) {
   return request({
-    url: '/books',
+    url: baseURL + '/api/UserLogin',
     method: 'post',
     data
   })
 }
 
-export function updateBook(data) {
-  return request({
-    url: '/books',
-    method: 'put',
-    data
-  })
-}
-
-export function deleteBook(id) {
-  return request({
-    url: `/books/${id}`,
-    method: 'delete'
-  })
-}
-
-export function login(data) {
-  return request({
-    url: '/books/Userlogin',//登录接口地址
-    method: 'post',//请求方法
-    data//请求数据（用户名、密码、身份）
-  })
-}
-
 export function getUserInfo() {
   return request({
-    url: '/books/getUserInfo',//获取用户信息接口地址
+    url: baseURL + '/api/GetUserInfo',
     method: 'get'
   })
 }

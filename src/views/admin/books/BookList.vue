@@ -1,420 +1,345 @@
 <template>
-    <div class="simple-book-list">
-        <!-- 搜索和操作栏 -->
-        <div class="header">
-            <div class="search-box">
-                <el-input 
-                    v-model="searchText" 
-                    placeholder="搜索图书名称、作者或ISBN" 
-                    style="width: 300px" 
-                    clearable
-                >
-                    <template #prefix>
-                        <el-icon><Search /></el-icon>
-                    </template>
-                </el-input>
-                <el-button type="primary" @click="loadBooks">搜索</el-button>
-            </div>
-            <el-button type="success" @click="handleAdd" class="add-btn">
-                <el-icon><Plus /></el-icon>
-                添加图书
-            </el-button>
-        </div>
-
-        <!-- 图书卡片列表 -->
-        <div class="book-cards">
-            <div 
-                v-for="book in bookList" 
-                :key="book.id" 
-                class="book-card"
-            >
-                <div class="book-info">
-                    <h3 class="book-title">{{ book.title }}</h3>
-                    <div class="book-details">
-                        <div class="detail-item">
-                            <span class="label">作者：</span>
-                            <span class="value">{{ book.author }}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">ISBN：</span>
-                            <span class="value">{{ book.isbn }}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">分类：</span>
-                            <span class="value">{{ book.category }}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">出版社：</span>
-                            <span class="value">{{ book.publisher }}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">状态：</span>
-                            <span class="status" :class="getStatusClass(book.status)">
-                                {{ getStatusText(book.status) }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="book-actions">
-                    <el-button size="small" @click="handleEdit(book)">编辑</el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(book)">删除</el-button>
-                    <el-button size="small" type="info" @click="handleView(book)">详情</el-button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 分页 -->
-        <div class="pagination">
-            <el-pagination
-                v-model:current-page="currentPage"
-                v-model:page-size="pageSize"
-                :total="total"
-                :page-sizes="[10, 20, 50, 100]"
-                layout="total, sizes, prev, next, jumper"
-                @size-change="loadBooks"
-                @current-change="loadBooks"
-            />
-        </div>
-
-        <!-- 添加/编辑对话框 -->
-        <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
-            <el-form :model="formData" label-width="80px">
-                <el-form-item label="图书名称" required>
-                    <el-input v-model="formData.title" />
-                </el-form-item>
-            
-                <el-form-item label="作者" required>
-                    <el-input v-model="formData.author" />
-                </el-form-item>
-            
-                <el-form-item label="ISBN" required>
-                    <el-input v-model="formData.isbn" />
-                </el-form-item>
-            
-                <el-form-item label="分类">
-                    <el-input v-model="formData.category" />
-                </el-form-item>
-            
-                <el-form-item label="出版社">
-                    <el-input v-model="formData.publisher" />
-                </el-form-item>
-            
-                <el-form-item label="总数量" required>
-                    <el-input-number
-                        v-model="formData.total"
-                        :min="1"
-                        :max="999"
-                    />
-                </el-form-item>
-            
-                <el-form-item label="状态">
-                    <el-select v-model="formData.status">
-                        <el-option label="可借阅" :value="1" />
-                        <el-option label="已借出" :value="0" />
-                        <el-option label="维护中" :value="2" />
-                    </el-select>
-                </el-form-item>
-            </el-form>
-        
-            <template #footer>
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="handleSubmit">确定</el-button>
-            </template>
-        </el-dialog>
+  <div class="book-list">
+    <div class="header">
+      <h2>图书管理</h2>
+      <div class="search-box">
+        <input v-model="searchText" placeholder="搜索图书...">
+        <button @click="loadBooks">搜索</button>
+        <button @click="showAddDialog" class="add-btn">添加图书</button>
+      </div>
     </div>
+
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>书名</th>
+          <th>作者</th>
+          <th>ISBN</th>
+          <th>分类</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="book in bookList" :key="book.id">
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>{{ book.category }}</td>
+          <td>
+            <span :class="getStatusClass(book.status)">
+              {{ getStatusText(book.status) }}
+            </span>
+          </td>
+          <td>
+            <button @click="editBook(book)" class="edit-btn">编辑</button>
+            <button @click="deleteBook(book)" class="delete-btn">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 添加/编辑对话框 -->
+    <div v-if="showDialog" class="dialog">
+      <div class="dialog-content">
+        <h3>{{ isEditing ? '编辑图书' : '添加图书' }}</h3>
+        
+        <div class="form-group">
+          <label>书名：</label>
+          <input v-model="formData.title">
+        </div>
+        
+        <div class="form-group">
+          <label>作者：</label>
+          <input v-model="formData.author">
+        </div>
+        
+        <div class="form-group">
+          <label>ISBN：</label>
+          <input v-model="formData.isbn">
+        </div>
+        
+        <div class="form-group">
+          <label>分类：</label>
+          <input v-model="formData.category">
+        </div>
+        
+        <div class="form-group">
+          <label>出版社：</label>
+          <input v-model="formData.publisher">
+        </div>
+        
+        <div class="form-group">
+          <label>状态：</label>
+          <select v-model="formData.status">
+            <option value="1">可借阅</option>
+            <option value="0">已借出</option>
+            <option value="2">维护中</option>
+          </select>
+        </div>
+        
+        <div class="dialog-buttons">
+          <button @click="saveBook">保存</button>
+          <button @click="closeDialog">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Plus } from '@element-plus/icons-vue'
+<script>
 import { getBooks, addBook, updateBook, deleteBook } from '@/api/book.js'
 
-// 数据
-const searchText = ref('')
-const bookList = ref([])
-const currentPage = ref(1)
-const pageSize = ref(10)
-const total = ref(0)
-
-// 对话框相关
-const dialogVisible = ref(false)
-const dialogTitle = ref('')
-const formData = ref({
-  id: '',
-  title: '',
-  author: '',
-  isbn: '',
-  category: '',
-  publisher: '',
-  total: 1,
-  status: 1
-})
-
-// 状态文本和样式
-const getStatusText = (status) => {
-  const statusMap = {
-    0: '已借出',
-    1: '可借阅',
-    2: '维护中'
-  }
-  return statusMap[status] || '未知'
-}
-
-const getStatusClass = (status) => {
-  const classMap = {
-    0: 'status-loaned',
-    1: 'status-available',
-    2: 'status-maintenance'
-  }
-  return classMap[status] || 'status-unknown'
-}
-
-// 加载图书列表
-const loadBooks = async () => {
-  try {
-    const params = {
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      keyword: searchText.value
-    }
-    
-    const res = await getBooks(params)
-    bookList.value = res.data?.list || res.data || []
-    total.value = res.data?.total || res.total || bookList.value.length
-  } catch (error) {
-    ElMessage.error('加载失败')
-    // 使用模拟数据
-    bookList.value = [
-      {
-        id: 1,
-        title: 'Vue.js设计与实现',
-        author: '霍春阳', 
-        isbn: '9787115585629',
-        category: '前端',
-        publisher: '人民邮电出版社',
-        total: 10,
-        available: 8,
-        status: 1
-      },
-      {
-        id: 2,
-        title: 'JavaScript高级程序设计',
-        author: 'Matt Frisbie',
-        isbn: '9787115599754',
-        category: '前端',
-        publisher: '人民邮电出版社',
-        total: 15,
-        available: 5,
-        status: 0
-      },
-      {
-        id: 3,
-        title: '深入理解计算机系统',
-        author: 'Randal E. Bryant',
-        isbn: '9787111544937',
-        category: '计算机基础',
-        publisher: '机械工业出版社',
-        total: 8,
-        available: 8,
-        status: 1
+export default {
+  name: 'BookList',
+  data() {
+    return {
+      bookList: [],
+      searchText: '',
+      showDialog: false,
+      isEditing: false,
+      formData: {
+        id: '',
+        title: '',
+        author: '',
+        isbn: '',
+        category: '',
+        publisher: '',
+        status: '1'
       }
-    ]
-    total.value = bookList.value.length
-  }
-}
-
-// 操作函数
-const handleAdd = () => {
-  dialogTitle.value = '添加图书'
-  formData.value = {
-    title: '',
-    author: '',
-    isbn: '',
-    category: '',
-    publisher: '',
-    total: 1,
-    status: 1
-  }
-  dialogVisible.value = true
-}
-
-const handleEdit = (row) => {
-  dialogTitle.value = '编辑图书'
-  formData.value = { ...row }
-  dialogVisible.value = true
-}
-
-const handleView = (row) => {
-  ElMessage.info(`查看图书：${row.title}`)
-}
-
-const handleDelete = async (row) => {
-  try {
-    await ElMessageBox.confirm(
-      `确定要删除《${row.title}》吗？`,
-      '提示',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    
-    await deleteBook(row.id)
-    ElMessage.success('删除成功')
-    loadBooks()
-  } catch {
-    // 用户取消删除
-  }
-}
-
-const handleSubmit = async () => {
-  try {
-    if (formData.value.id) {
-      await updateBook(formData.value)
-      ElMessage.success('更新成功')
-    } else {
-      await addBook(formData.value)
-      ElMessage.success('添加成功')
     }
+  },
+  mounted() {
+    this.loadBooks()
+  },
+  methods: {
+    async loadBooks() {
+      try {
+        const res = await getBooks({
+          keyword: this.searchText
+        })
+        this.bookList = res.data || []
+      } catch (error) {
+        // 使用模拟数据
+        this.bookList = [
+          {
+            id: 1,
+            title: 'Vue.js设计与实现',
+            author: '霍春阳',
+            isbn: '9787115585629',
+            category: '前端',
+            publisher: '人民邮电出版社',
+            status: 1
+          },
+          {
+            id: 2,
+            title: 'JavaScript高级程序设计',
+            author: 'Matt Frisbie',
+            isbn: '9787115599754',
+            category: '前端',
+            publisher: '人民邮电出版社',
+            status: 0
+          }
+        ]
+      }
+    },
     
-    dialogVisible.value = false
-    loadBooks()
-  } catch (error) {
-    ElMessage.error('操作失败')
+    showAddDialog() {
+      this.isEditing = false
+      this.formData = {
+        id: '',
+        title: '',
+        author: '',
+        isbn: '',
+        category: '',
+        publisher: '',
+        status: '1'
+      }
+      this.showDialog = true
+    },
+    
+    editBook(book) {
+      this.isEditing = true
+      this.formData = { ...book }
+      this.showDialog = true
+    },
+    
+    async saveBook() {
+      try {
+        if (this.isEditing) {
+          await updateBook(this.formData)
+        } else {
+          await addBook(this.formData)
+        }
+        this.showDialog = false
+        this.loadBooks()
+      } catch (error) {
+        alert('操作失败')
+      }
+    },
+    
+    async deleteBook(book) {
+      if (confirm(`确定要删除《${book.title}》吗？`)) {
+        try {
+          await deleteBook(book.id)
+          this.loadBooks()
+        } catch (error) {
+          alert('删除失败')
+        }
+      }
+    },
+    
+    closeDialog() {
+      this.showDialog = false
+    },
+    
+    getStatusText(status) {
+      const map = { 0: '已借出', 1: '可借阅', 2: '维护中' }
+      return map[status] || '未知'
+    },
+    
+    getStatusClass(status) {
+      const map = { 0: 'status-loaned', 1: 'status-available', 2: 'status-maintenance' }
+      return map[status] || 'status-unknown'
+    }
   }
 }
-
-// 初始化加载
-onMounted(() => {
-  loadBooks()
-})
 </script>
 
-<style scoped>
-.simple-book-list {
+<style>
+.book-list {
   padding: 20px;
-  background-color: #f5f7fa;
-  min-height: 100vh;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .search-box {
   display: flex;
   gap: 10px;
-  align-items: center;
+  margin-top: 10px;
 }
 
-.add-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.book-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.book-card {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.book-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.book-title {
-  margin: 0 0 15px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #303133;
-  border-bottom: 1px solid #ebeef5;
-  padding-bottom: 10px;
-}
-
-.book-details {
-  flex: 1;
-}
-
-.detail-item {
-  display: flex;
-  margin-bottom: 8px;
-  align-items: center;
-}
-
-.label {
-  font-weight: 500;
-  color: #606266;
-  min-width: 60px;
-}
-
-.value {
-  color: #303133;
-  flex: 1;
-}
-
-.status {
-  padding: 2px 8px;
+.search-box input {
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
+  width: 300px;
+}
+
+.book-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.book-table th,
+.book-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.book-table th {
+  background-color: #f5f5f5;
 }
 
 .status-available {
-  background-color: #f0f9ff;
-  color: #1890ff;
+  color: green;
+  font-weight: bold;
 }
 
 .status-loaned {
-  background-color: #fff2f0;
-  color: #ff4d4f;
+  color: red;
+  font-weight: bold;
 }
 
 .status-maintenance {
-  background-color: #fff7e6;
-  color: #fa8c16;
+  color: orange;
+  font-weight: bold;
 }
 
-.status-unknown {
-  background-color: #f5f5f5;
-  color: #8c8c8c;
+.edit-btn {
+  background: #409EFF;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
 }
 
-.book-actions {
-  margin-top: 15px;
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
+.delete-btn {
+  background: #f56c6c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.pagination {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.add-btn {
+  background: #67c23a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.dialog-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 500px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dialog-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.dialog-buttons button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dialog-buttons button:first-child {
+  background: #409EFF;
+  color: white;
 }
 </style>

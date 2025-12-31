@@ -12,20 +12,23 @@
     <table class="book-table">
       <thead>
         <tr>
-          <th>书名</th>
           <th>作者</th>
-          <th>ISBN</th>
+          <th>书名</th>
           <th>分类</th>
+          <th>出版社</th>
+          <th>库存</th>
           <th>状态</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="book in bookList" :key="book.id">
-          <td>{{ book.title }}</td>
           <td>{{ book.author }}</td>
-          <td>{{ book.isbn }}</td>
+          <td>{{ book.bookname }}</td>
           <td>{{ book.category }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.inventory }}</td>
+          <td>{{ book.status }}</td>
           <td>
             <span :class="getStatusClass(book.status)">
               {{ getStatusText(book.status) }}
@@ -43,32 +46,32 @@
     <div v-if="showDialog" class="dialog">
       <div class="dialog-content">
         <h3>{{ isEditing ? '编辑图书' : '添加图书' }}</h3>
-        
-        <div class="form-group">
-          <label>书名：</label>
-          <input v-model="formData.title">
-        </div>
-        
+
         <div class="form-group">
           <label>作者：</label>
           <input v-model="formData.author">
         </div>
-        
+
         <div class="form-group">
-          <label>ISBN：</label>
-          <input v-model="formData.isbn">
+          <label>书名：</label>
+          <input v-model="formData.bookname">
         </div>
-        
+
         <div class="form-group">
           <label>分类：</label>
           <input v-model="formData.category">
         </div>
-        
+
         <div class="form-group">
           <label>出版社：</label>
           <input v-model="formData.publisher">
         </div>
-        
+
+        <div class="form-group">
+          <label>库存：</label>
+          <input v-model="formData.inventory">
+        </div>
+
         <div class="form-group">
           <label>状态：</label>
           <select v-model="formData.status">
@@ -77,7 +80,7 @@
             <option value="2">维护中</option>
           </select>
         </div>
-        
+
         <div class="dialog-buttons">
           <button @click="saveBook">保存</button>
           <button @click="closeDialog">取消</button>
@@ -100,11 +103,11 @@ export default {
       isEditing: false,
       formData: {
         id: '',
-        title: '',
         author: '',
-        isbn: '',
+        bookname: '',
         category: '',
         publisher: '',
+        inventory: '',
         status: '1'
       }
     }
@@ -143,27 +146,27 @@ export default {
         // ]
       }
     },
-    
+
     showAddDialog() {
       this.isEditing = false
       this.formData = {
         id: '',
-        title: '',
         author: '',
-        isbn: '',
+        bookname: '',
         category: '',
         publisher: '',
+        inventory: '',
         status: '1'
       }
       this.showDialog = true
     },
-    
+
     editBook(book) {
       this.isEditing = true
       this.formData = { ...book }
       this.showDialog = true
     },
-    
+
     async saveBook() {
       try {
         if (this.isEditing) {
@@ -177,7 +180,7 @@ export default {
         alert('操作失败')
       }
     },
-    
+
     async deleteBook(book) {
       if (confirm(`确定要删除《${book.title}》吗？`)) {
         try {
@@ -188,16 +191,16 @@ export default {
         }
       }
     },
-    
+
     closeDialog() {
       this.showDialog = false
     },
-    
+
     getStatusText(status) {
       const map = { 0: '已借出', 1: '可借阅', 2: '维护中' }
       return map[status] || '未知'
     },
-    
+
     getStatusClass(status) {
       const map = { 0: 'status-loaned', 1: 'status-available', 2: 'status-maintenance' }
       return map[status] || 'status-unknown'
@@ -294,7 +297,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;

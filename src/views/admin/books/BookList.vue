@@ -77,7 +77,6 @@
           <select v-model="formData.status">
             <option value="1">可借阅</option>
             <option value="0">已借出</option>
-            <option value="2">维护中</option>
           </select>
         </div>
 
@@ -197,7 +196,7 @@ export default {
     },
 
     getStatusText(status) {
-      const map = { 0: '已借出', 1: '可借阅', 2: '维护中' }
+      const map = { 0: '已借出', 1: '可借阅'}
       return map[status] || '未知'
     },
 

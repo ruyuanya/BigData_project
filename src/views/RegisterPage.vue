@@ -48,6 +48,7 @@
 
 <script>
 import { ElMessage } from 'element-plus'
+import { register } from '@/api/book'
 
 export default {
   name: 'RegisterPage',
@@ -58,10 +59,7 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        role: '',
-        real_name: '',
-        email: '',
-        phone: ''
+        role: ''
       }
     }
   },
@@ -74,11 +72,46 @@ export default {
 
       this.loading = true
       try {
-        await this.$axios.post('/api/auth/register', this.form)
-        ElMessage.success('注册成功')
-        this.$router.push('/login')
+        const response = await register({
+          username: this.form.username,
+          password: this.form.password,
+          role: this.form.role
+        })
+        
+        console.log('注册响应:', response)
+        
+        // 处理成功的响应格式：{success: true, data: Array(2)}
+        if (response && response.success === true) {
+          ElMessage.success('注册成功')
+          // 延迟跳转以避免可能的DOM操作冲突
+          setTimeout(() => {
+            this.$router.push('/Login')
+          }, 1000)
+          return
+        }
+        
+        // 处理其他可能的响应格式
+        if (response && response.data) {
+          if (response.data.code === 200 || response.data.success === true) {
+            ElMessage.success('注册成功')
+            setTimeout(() => {
+              this.$router.push('/Login')
+            }, 1000)
+            return
+          }
+        }
+        
+        ElMessage.error('注册失败: 响应格式异常')
+        
       } catch (error) {
-        ElMessage.error('注册失败: ' + (error.response?.data?.message || error.message))
+        console.error('注册错误详情:', error)
+        if (error.response) {
+          ElMessage.error(`注册失败: ${error.response.status} - ${error.response.data?.message || '服务器错误'}`)
+        } else if (error.request) {
+          ElMessage.error('注册失败: 无法连接到服务器，请检查网络连接')
+        } else {
+          ElMessage.error('注册失败: ' + error.message)
+        }
       } finally {
         this.loading = false
       }

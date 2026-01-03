@@ -45,3 +45,15 @@ export function getUserInfo() {
     method: 'get'
   })
 }
+
+export function register(data){
+  return request({
+    url: baseURL + '/api/UserRegister',
+    method: 'post',
+    data: {
+      username: data.username,
+      password: data.password,
+      role: data.role
+    }
+  })
+}

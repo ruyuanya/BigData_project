@@ -22,8 +22,13 @@ const routes = [
   {
     path: '/register',
     name: 'RegisterPage',
-    component: () => import('../views/RegisterPage.vue')
-  }, 
+    component: () => import('@/views/RegisterPage.vue')
+  },
+  {
+    path: '/login',
+    name: 'LoginPage', 
+    component: () => import('@/views/LoginPage.vue')
+  },
   {
     path: '/goal-detail/:id',
     name: 'GoalDetail',

@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { getBooks } from '@/api/book.js'
+import { getBooks, addBook } from '@/api/book.js'
 
 export default {
   name: 'BookList',
@@ -162,9 +162,25 @@ export default {
 
     async saveBook() {
       try {
-        alert('图书操作功能正在开发中...')
-        this.showDialog = false
+        if (this.isEditing) {
+          alert('编辑功能正在开发中...')
+        } else {
+          // 创建不包含id字段的数据对象，只传递存储过程需要的参数
+          const bookData = {
+            author: this.formData.author,
+            bookname: this.formData.bookname,
+            category: this.formData.category,
+            publisher: this.formData.publisher,
+            inventory: this.formData.inventory,
+            status: this.formData.status
+          }
+          await addBook(bookData)
+          this.showDialog = false
+          this.loadBooks()
+          alert('图书添加成功！')
+        }
       } catch (error) {
+        console.error('添加图书失败:', error)
         alert('操作失败')
       }
     },

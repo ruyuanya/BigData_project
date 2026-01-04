@@ -8,13 +8,13 @@ export function getBooks(params) {
   })
 }
 
-// export function addBook(data) {
-//   return request({
-//     url: '/api/books',
-//     method: 'post',
-//     data
-//   })
-// }
+export function addBook(data) {
+  return request({
+    url: baseURL + '/api/AddBook',
+    method: 'post',
+    data
+  })
+}
 
 // export function updateBook(data) {
 //   return request({

@@ -16,7 +16,7 @@
             icon="el-icon-notebook-2"
             @click="$router.push('/admin/books/BookList')"
             class="action-btn"
-            size="medium"
+            size="large"
           >
             进入图书管理
           </el-button>
@@ -25,7 +25,7 @@
             icon="el-icon-school"
             @click="$router.push('/about')"
             class="action-btn"
-            size="medium"
+            size="large"
           >
             关于深圳城职院
           </el-button>
@@ -34,7 +34,7 @@
             icon="el-icon-user"
             @click="$router.push('Login')"
             class="action-btn"
-            size="medium"
+            size="large"
           >
             用户登录
           </el-button>

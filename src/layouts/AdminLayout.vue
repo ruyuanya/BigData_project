@@ -43,3 +43,22 @@
     </el-main>
   </el-container>
 </template>
+
+<script>
+import { PieChart, Reading, User } from '@element-plus/icons-vue'
+
+export default {
+  name: 'AdminLayout',
+  components: {
+    PieChart,
+    Reading,
+    User
+  }
+}
+</script>
+
+<style scoped>
+.admin-layout {
+  height: 100vh;
+}
+</style>

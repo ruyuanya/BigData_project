@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 let baseURL = 'http://localhost:7003'
-// export function getBooks(params) {
-//   return request({
-//     url: '/api/books',
-//     method: 'get',
-//     params
-//   })
-// }
+export function getBooks(params) {
+  return request({
+    url: baseURL + '/api/GetBook',
+    method: 'get',
+    params
+  })
+}
 
 // export function addBook(data) {
 //   return request({

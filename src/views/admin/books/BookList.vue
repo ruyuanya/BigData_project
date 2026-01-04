@@ -28,7 +28,6 @@
           <td>{{ book.category }}</td>
           <td>{{ book.publisher }}</td>
           <td>{{ book.inventory }}</td>
-          <td>{{ book.status }}</td>
           <td>
             <span :class="getStatusClass(book.status)">
               {{ getStatusText(book.status) }}
@@ -90,7 +89,7 @@
 </template>
 
 <script>
-import { getBooks, addBook, updateBook, deleteBook } from '@/api/book.js'
+import { getBooks } from '@/api/book.js'
 
 export default {
   name: 'BookList',
@@ -120,29 +119,24 @@ export default {
         const res = await getBooks({
           keyword: this.searchText
         })
-        this.bookList = res.data || []
+        // 处理API返回的数据结构
+        console.log('API返回数据:', res)
+        if (res.data && Array.isArray(res.data)) {
+          // 如果是二维数组，取第一个元素
+          if (res.data.length > 0 && Array.isArray(res.data[0])) {
+            this.bookList = res.data[0]
+          } else {
+            this.bookList = res.data
+          }
+        } else if (res.data && res.data[0] && res.data[0][0]) {
+          // 兼容之前的结构
+          this.bookList = res.data[0][0]
+        } else {
+          this.bookList = []
+        }
       } catch (error) {
-        // 使用模拟数据
-        // this.bookList = [
-        //   {
-        //     id: 1,
-        //     title: 'Vue.js设计与实现',
-        //     author: '霍春阳',
-        //     isbn: '9787115585629',
-        //     category: '前端',
-        //     publisher: '人民邮电出版社',
-        //     status: 1
-        //   },
-        //   {
-        //     id: 2,
-        //     title: 'JavaScript高级程序设计',
-        //     author: 'Matt Frisbie',
-        //     isbn: '9787115599754',
-        //     category: '前端',
-        //     publisher: '人民邮电出版社',
-        //     status: 0
-        //   }
-        // ]
+        console.error('加载图书失败:', error)
+        this.bookList = []
       }
     },
 
@@ -168,23 +162,19 @@ export default {
 
     async saveBook() {
       try {
-        if (this.isEditing) {
-          await updateBook(this.formData)
-        } else {
-          await addBook(this.formData)
-        }
+        alert('图书操作功能正在开发中...')
         this.showDialog = false
-        this.loadBooks()
       } catch (error) {
         alert('操作失败')
       }
     },
 
     async deleteBook(book) {
-      if (confirm(`确定要删除《${book.title}》吗？`)) {
+      if (confirm(`确定要删除《${book.bookname}》吗？`)) {
         try {
-          await deleteBook(book.id)
-          this.loadBooks()
+          alert('删除功能正在开发中...')
+          // await deleteBook(book.id)
+          // this.loadBooks()
         } catch (error) {
           alert('删除失败')
         }
